@@ -59,7 +59,7 @@ OWN ability:
 
 Instace ability:
 
-    Ability.can?(user, Ability::READ, user) # => false
+    Ability.can?(user, Ability::READ, user) # => nil
     Ability.can(user, [Ability::READ], user.class)
     Ability.can?(user, Ability::READ, user) # => true
 
@@ -72,6 +72,17 @@ Other owner:
 
     Ability.can(group, Ability::READ, User)
     Ability.can?(group, Ability::READ, User) # => true
+
+
+Resource identifer:
+
+    ri = User.to_resource_identifer
+    Ability.can(user, Ability::READ, ri)
+    Ability.can?(user, Ability::READ, User) # => true
+
+    ri2 = ResourcesAuthorization::ResourceIdentifer.new('User', user.id.to_s)
+    Ability.can(user, [Ability::READ], ri2)
+    Ability.can?(user, Ability::READ, user) # => true
 
 ## TODO
   Support users group.
