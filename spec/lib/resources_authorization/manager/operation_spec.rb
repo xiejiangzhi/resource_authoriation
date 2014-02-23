@@ -229,6 +229,14 @@ describe ResourcesAuthorization::Manager::Operation do
       Ability.can?(@user, Ability::READ, ri).should == true
     end
 
+
+    it 'own ability, should included all abilities' do
+      Ability.can(@user, [Ability::OWN], User)
+      Ability.can?(@user, Ability::READ, User).should == true
+      # defined cannot write
+      Ability.can?(@user, Ability::WRITE, User).should == false
+      Ability.can?(@user, 'asdf', User).should == true
+    end
   end
 end
 

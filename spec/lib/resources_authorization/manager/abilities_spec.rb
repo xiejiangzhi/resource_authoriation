@@ -97,6 +97,15 @@ describe ResourcesAuthorization::Manager::Abilities do
     it 'test not exist ability' do
       @a.can?(Ability::OWN).should == nil
     end
+
+    it 'own should can replace other abilities' do
+      @a.can(Ability::OWN)
+      @a.can?(Ability::READ).should == true
+      # cannot write
+      @a.can?(Ability::WRITE).should == false
+      @a.can?('other').should == true
+      @a.can?('foo').should == true
+    end
   end
 end
 

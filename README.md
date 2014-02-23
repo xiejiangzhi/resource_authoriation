@@ -16,30 +16,62 @@ Or install it yourself as:
 
     $ gem install resources_authorization
 
+Copy model file:
+
+    curl https://raw.github.com/xjz19901211/resource_authoriation/master/templates/ability.rb\
+    > myapp/models/ability.rb
+
+
 ## Usage
 
-* copy templates/ability.rb to models
+Give all users ability:
 
-```
-
-    # all user can read
     Ability.can(nil, [Ability::READ], User)
 
-    # specified user cannot read
+
+Give specified user ability:
+
+    Ability.can(user, [Ability::WRITE], user)
+
+
+Disable ability:
+
+    Ability.cannot(user, [Ability::WRITE], Ability)
+
+Can?
+
+    Ability.can?(user, Ability::READ, User) # => nil
+    # give
+    Ability.can(user, [Ability::READ], User)
+    Ability.can?(user, Ability::READ, User) # => true
+
+    # reject
     Ability.cannot(user, [Ability::READ], User)
-
     Ability.can?(user, Ability::READ, User) # => false
-    Ability.can?(user.new, Ability::READ, User) # => true
-    Ability.can?(user.new, Ability::READ, user) # => true
-    Ability.can?(user, Ability::WRITE, User) # => nil (not defined)
 
 
-    Ability.cannot(group, Ability::READ, User)
-    Ability.can?(group, Ability::READ, User) # => false
-    Ability.can?(group, Ability::READ, User.new) # => false
+OWN ability:
 
-```
+    Ability.can(user, [Ability::OWN], User)
+    Ability.can?(user, Ability::READ, User) # => true
+    Ability.can?(user, Ability::WRITE, User) # => true
+    Ability.can?(user, 'other', User) # => true
 
+Instace ability:
+
+    Ability.can?(user, Ability::READ, user) # => false
+    Ability.can(user, [Ability::READ], user.class)
+    Ability.can?(user, Ability::READ, user) # => true
+
+Other owner:
+
+    class Group
+      # has_many :users
+    end
+    group = group.new
+
+    Ability.can(group, Ability::READ, User)
+    Ability.can?(group, Ability::READ, User) # => true
 
 ## TODO
   Support users group.
