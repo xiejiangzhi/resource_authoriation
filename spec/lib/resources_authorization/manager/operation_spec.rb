@@ -39,6 +39,17 @@ describe ResourcesAuthorization::Manager::Operation do
       a.owner.should == nil
       a.abilities.should == ['+read']
     end
+
+
+    it 'resource is ResourceIdentifer instance, should direct use' do
+      ri = ResourcesAuthorization::ResourceIdentifer.new('User', 'user_id')
+      expect {
+        Ability.can(nil, [Ability::READ], ri)
+      }.to change(Ability, :count).by(1)
+
+      a = Ability.first
+      a.resource_identifer.should == ri.to_s
+    end
   end
 
   describe 'cannot' do
@@ -84,10 +95,22 @@ describe ResourcesAuthorization::Manager::Operation do
       a.owner.should == nil
       a.abilities.should == ['-read']
     end
+
+
+    it 'resource is ResourceIdentifer instance, should direct use' do
+      ri = ResourcesAuthorization::ResourceIdentifer.new('User', 'user_id')
+      expect {
+        Ability.cannot(nil, [Ability::READ], ri)
+      }.to change(Ability, :count).by(1)
+
+      a = Ability.first
+      a.resource_identifer.should == ri.to_s
+    end
+
   end
 
   describe 'clear' do
-    it 'clear empty record, ok' do
+    it 'empty record, should ok' do
       expect {
         Ability.clear(@user, [], User)
       }.to change(Ability, :count).by(0)
@@ -98,7 +121,7 @@ describe ResourcesAuthorization::Manager::Operation do
     end
 
 
-    it 'clear can ability, remove can ability' do
+    it 'can ability, should remove can ability' do
       Ability.can(@user, [Ability::READ], User)
       a = Ability.first
       
@@ -130,6 +153,19 @@ describe ResourcesAuthorization::Manager::Operation do
       Ability.clear(nil, [Ability::READ], User)
       a.reload.abilities.should == []
     end
+
+
+    it 'resource is ResourceIdentifer instance, should direct use' do
+      Ability.can(nil, [Ability::READ], User)
+      ri = ResourcesAuthorization::ResourceIdentifer.new('User')
+      a = Ability.first
+      a.abilities.should == ['+read']
+
+      Ability.clear(nil, [Ability::READ], ri)
+
+      a.reload.abilities.should == []
+    end
+
   end
 
   describe 'can?' do
@@ -186,6 +222,13 @@ describe ResourcesAuthorization::Manager::Operation do
       Ability.cannot(@user, [Ability::READ], @user)
       Ability.can?(@user, Ability::READ, @user).should == false
     end
+
+
+    it 'resource is ResourceIdentifer instance, should direct use' do
+      ri = User.to_resource_identifer
+      Ability.can?(@user, Ability::READ, ri).should == true
+    end
+
   end
 end
 

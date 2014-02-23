@@ -8,7 +8,11 @@ end
 
 class Object
   def to_resource_identifer
-    ResourcesAuthorization::ResourceIdentifer.co(self)
+    if ResourcesAuthorization::ResourceIdentifer === self
+      self
+    else
+      ResourcesAuthorization::ResourceIdentifer.co(self)
+    end
   end
 end
 

@@ -42,13 +42,7 @@ Or install it yourself as:
 
 
 ## TODO
-
-```  
-
-    ri = ResourcesAuthorization::ResourceIdentifer.new('User', user.id)
-    Ability.can(user, [Ability::READ], ri)
-
-```
+  Support users group.
 
 ## Contributing
 
