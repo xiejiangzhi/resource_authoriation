@@ -13,7 +13,7 @@ require 'pry'
 
 
 require 'mongo_mapper'
-MongoMapper.config = {'test' => {'database' => 'test'}}
+MongoMapper.config = {'test' => {'database' => 'test', :safe => true}}
 MongoMapper.connect :test
 
 class User

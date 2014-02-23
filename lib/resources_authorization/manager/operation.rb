@@ -55,12 +55,16 @@ private
     attrs = {
       :resource_identifer => resource.to_resource_identifer.to_s
     }
-    return attrs unless owner
 
-    attrs.merge!({
-      :owner_id => owner.id,
-      :owner_type => owner.class.name
-    })
+    if owner
+      attrs.merge!({
+        :owner_id => owner.id, :owner_type => owner.class.name
+      }) 
+    else
+      attrs.merge!({
+        :owner_id => nil, :owner_type => nil
+      }) 
+    end
   end
   
 

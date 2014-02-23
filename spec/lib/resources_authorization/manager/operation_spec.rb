@@ -237,6 +237,13 @@ describe ResourcesAuthorization::Manager::Operation do
       Ability.can?(@user, Ability::WRITE, User).should == false
       Ability.can?(@user, 'asdf', User).should == true
     end
+
+
+    it 'Fix bug: owner is nil, should not find owner is not empty' do
+      u = User.create
+      Ability.can(@user, [Ability::READ], User)
+      Ability.can?(u, Ability::READ, User).should == nil
+    end
   end
 end
 
